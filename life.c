@@ -19,71 +19,67 @@ static int ft_strlen(char* str)
 }
 
 
-static void life(char** board, int iterations, int row_size, int col_size)
+static void life(char** board, int row_size, int col_size)
 {
-    for (int k = 0; k < iterations; k++)
+    for (int i = 0; i < row_size; i++)
     {
-        for (int i = 0; i < row_size; i++)
+        bool up = i-1 >= 0;
+        bool down = i+1 < row_size;
+        for (int j = 0; j < col_size; j++)
         {
-            for (int j = 0; j < col_size; j++)
+            int livingCell = 0;
+            bool right = j+1 < col_size;
+            bool left = j-1 >= 0;
+
+            if (up)
             {
-                int livingCell = 0;
-                bool up = i-1 >= 0;
-                bool down = i+1 < row_size;
-                bool right = j+1 < col_size;
-                bool left = j-1 >= 0;
-
-                if (up)
-                {
-                    if (board[i-1][j] > '0')
-                        livingCell++;
-                    
-                    if (left && board[i-1][j-1] > '0')
-                        livingCell++;
-                    
-                    if (right && board[i-1][j+1] > '0')
-                        livingCell++;
-                }
-                if (down)
-                {
-                    if (board[i+1][j] > '0')
-                        livingCell++;
-                    
-                    if (left && board[i+1][j-1] > '0')
-                        livingCell++;
-                    
-                    if (right && board[i+1][j+1] > '0')
-                        livingCell++;
-                }
-
-                if (left && board[i][j-1] > '0')
-                    livingCell++;
-                if (right && board[i][j+1] > '0')
+                if (board[i-1][j] > '0')
                     livingCell++;
                 
-                if (board[i][j] > '0')
-                {
-                    if (livingCell < 2 || livingCell > 3)
-                        board[i][j] = '2';
-                }
-                else
-                {
-                    if (livingCell == 3)
-                        board[i][j] = '/';
-                }
+                if (left && board[i-1][j-1] > '0')
+                    livingCell++;
                 
+                if (right && board[i-1][j+1] > '0')
+                    livingCell++;
+            }
+            if (down)
+            {
+                if (board[i+1][j] > '0')
+                    livingCell++;
+                
+                if (left && board[i+1][j-1] > '0')
+                    livingCell++;
+                
+                if (right && board[i+1][j+1] > '0')
+                    livingCell++;
+            }
+
+            if (left && board[i][j-1] > '0')
+                livingCell++;
+            if (right && board[i][j+1] > '0')
+                livingCell++;
+            
+            if (board[i][j] > '0')
+            {
+                if (livingCell < 2 || livingCell > 3)
+                    board[i][j] = '2';
+            }
+            else
+            {
+                if (livingCell == 3)
+                    board[i][j] = '/';
             }
         }
+    }
 
-        for (int i = 0; i < row_size; i++)
+    for (int i = 0; i < row_size; i++)
+    {
+        for (int j = 0; j < col_size; j++)
         {
-            for (int j = 0; j < col_size; j++)
-            {
-                if (board[i][j] == '2')
-                    board[i][j] = '0';
-                else if (board[i][j] == '/')
-                    board[i][j] = '1';
-            }
+            if (board[i][j] == '2')
+                board[i][j] = '0';
+            else if (board[i][j] == '/')
+                board[i][j] = '1';
         }
     }
 }
@@ -125,10 +121,7 @@ static bool load_board(char** board, char* actions, int row_size, int col_size)
             draw = !draw;
         
         if (draw)
-        {
-            if (y >= 0 && y < row_size && x >= 0 && x < col_size)
-                board[y][x] = '1';
-        }
+            board[y][x] = '1';
     }
     return true;
 }
@@ -188,19 +181,18 @@ int main(int argc, char const *argv[])
     int height = atoi(argv[2]);
     int iterations = atoi(argv[3]);
     
-    if (height < 0 || width < 0)
+    if (height <= 0 || width <= 0 || iterations < 0)
         return 1;
     
     char* actions = read_stdin();
-    // if (!actions)
-    //     return 1;
-
     char** board = calloc(sizeof(char*), height + 1);
     if (board == NULL)
     {
-        free(actions);
+        if (actions)
+            free(actions);
         return 1;
     }
+    board[height] = NULL;
 
     if (!load_board(board, actions, height, width))
     {
@@ -213,15 +205,14 @@ int main(int argc, char const *argv[])
     if (actions)
         free(actions);
 
-    life(board, iterations, height, width);
+    for (int i = 0; i < iterations; i++)
+        life(board, height, width);
 
+    
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
-        {
-            char ch = board[i][j];
-            putchar(ch == '1' ? 'O' : ' ');
-        }
+            putchar(board[i][j] == '1' ? 'O' : ' ');
         putchar('\n');
     }
 
@@ -231,4 +222,6 @@ int main(int argc, char const *argv[])
 
     if (board)
         free(board);
+    
+    return 0;
 }
