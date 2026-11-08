@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <stdio.h>
+#include <ncurses.h>
 
 static int ft_strlen(char* str)
 {
@@ -138,7 +138,6 @@ static void ft_memcpy(char* dest, char* src)
         dest[i] = src[i];
         i++;
     }
-    
 }
 
 static char* read_stdin()
@@ -205,16 +204,32 @@ int main(int argc, char const *argv[])
     if (actions)
         free(actions);
 
-    for (int i = 0; i < iterations; i++)
-        life(board, height, width);
+    initscr();
+    curs_set(0);
+    nodelay(stdscr, TRUE);
 
     
-    for (int i = 0; i < height; i++)
+    // int key = getch();
+    // if (key == 'Q' || key == 'q')
+    //     break;
+    for (int i = 0; i < iterations; i++)
     {
-        for (int j = 0; j < width; j++)
-            putchar(board[i][j] == '1' ? 'O' : ' ');
-        putchar('\n');
+        clear();
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                bool cell = board[i][j] == '1'; 
+                mvprintw(i, j, cell ? "O" : " ");
+            }
+            mvprintw(i+1, 0, "\n");
+        }
+        refresh();
+        napms(50);
+        life(board, height, width);
     }
+
+    
 
     for (int i = 0; i < height; i++)
         if (board[i])
@@ -223,5 +238,6 @@ int main(int argc, char const *argv[])
     if (board)
         free(board);
     
+    endwin();
     return 0;
 }
