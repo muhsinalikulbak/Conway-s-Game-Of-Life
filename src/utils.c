@@ -27,10 +27,11 @@ void ft_memcpy(char* dest, char* src)
     }
 }
 
-void free_all(char** arr, int height)
+void free_all(void* ptr, int height)
 {
-    if (!arr)
+    if (!ptr)
         return;
+    void** arr = (void**)ptr;
 
     for (int i = 0; i < height; i++)
         if (arr[i])

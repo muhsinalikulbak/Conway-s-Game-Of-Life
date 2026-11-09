@@ -82,23 +82,34 @@ void start_game(char** board, int height, int width, int iterations)
     {
         start_color();
         use_default_colors();
-        init_pair(1, COLOR_GREEN, COLOR_BLACK);
-        init_pair(2, COLOR_GREEN, COLOR_BLACK);
+        init_pair(PAIR_MESSAGE, COLOR_BLUE, COLOR_BLACK);
+        init_pair(NEW_BORN, COLOR_WHITE, -1);
+        init_pair(TEEN, COLOR_GREEN, -1);
+        init_pair(ADULT, COLOR_YELLOW, -1);
+        init_pair(OLD, COLOR_RED, -1);
     }
     else
         return;
-    
-    erase();
 
+    int** alive_log = calloc(height + 1, sizeof(int*));
+    if (!alive_log)
+        return;
+
+    alive_log[height] = NULL;
+
+    for (int i = 0; i < height; i++)
+    {
+        alive_log[i] = calloc(width, sizeof(int));
+    }
+
+    erase();
     char* message = "Welcome Conyway's Game Of Life";
     for (int i = 0; i < ft_strlen(message); i++)
-        mvaddch(0,i+70, message[i] | COLOR_PAIR(2));
+        mvaddch(0,i+70, message[i] | COLOR_PAIR(PAIR_MESSAGE));
 
     refresh();
     napms(2000);
-
     erase();
-    bkgd(COLOR_PAIR(1));
 
     for (int i = 0; i < iterations; i++)
     {
@@ -112,12 +123,25 @@ void start_game(char** board, int height, int width, int iterations)
             {
                 if (board[j][k] == '1')
                 {
-                    mvaddch(j, k, 'O');
+                    int age = alive_log[j][k]++;
+
+                    if (age == 0)
+                        mvaddch(j, k, 'O' | COLOR_PAIR(NEW_BORN));
+                    else if (age <= 5)
+                        mvaddch(j, k, 'O' | COLOR_PAIR(TEEN));
+                    else if (age <= 11)
+                        mvaddch(j, k, 'O' | COLOR_PAIR(ADULT));
+                    else
+                        mvaddch(j, k, 'O' | COLOR_PAIR(OLD));
                 }
+                else
+                    alive_log[j][k] = 0;
+  
             }
         }
         refresh();
         napms(100);
         life(board, height, width);
     }
+    free_all(alive_log, height);
 }

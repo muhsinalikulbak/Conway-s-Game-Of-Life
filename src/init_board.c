@@ -29,7 +29,7 @@ bool load_board(char** board, char* actions, int row_size, int col_size)
 
     for (int i = 0; i < row_size; i++)
     {
-        board[i] = calloc(sizeof(char), col_size + 1);
+        board[i] = calloc(col_size + 1, sizeof(char));
         if (!board[i])
         {
             free_all(board, row_size);
@@ -79,7 +79,7 @@ char* read_stdin()
         buffer[byte] = '\0';
         int new_size = byte + ft_strlen(actions);
 
-        char* tmp = calloc(sizeof(char), new_size + 1);
+        char* tmp = calloc(new_size + 1, sizeof(char));
         if (!tmp)
         {
             if (actions)

@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
     if (height <= 0 || width <= 0 || iterations < 0)
         return 1;
 
-    char** board = calloc(sizeof(char*), height + 1);
+    char** board = calloc(height + 1, sizeof(char*));
     if (board == NULL)
         return 1;
     board[height] = NULL;
