@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <ncurses.h>
 #include "init_board.h"
+#include "utils.h"
 
 static void life(char** board, int row_size, int col_size)
 {
@@ -75,25 +76,46 @@ static void life(char** board, int row_size, int col_size)
 static void start_game(char** board, int height, int width, int iterations)
 {
     freopen("/dev/tty", "r", stdin);
-    initscr();
-    curs_set(0);
-    cbreak();
-    noecho();
-    nodelay(stdscr, TRUE);
+    initscr(); // screen'i başlatır
+    curs_set(0); // İmleci görünmez yapar
+    cbreak(); // Tuşlar enter beklenmeden direk okunur (Normalde enter'a basılır)
+    noecho(); // Basılan tuşların ekrana basılmasını engeller.
+    nodelay(stdscr, TRUE); // getch normalde bloklar (veri bekler), bloklamadan veri alabilmeyi sağlar
+
+    if (has_colors())
+    {
+        start_color();
+        use_default_colors();
+        init_pair(1, COLOR_GREEN, COLOR_BLACK);
+        init_pair(2, COLOR_GREEN, COLOR_BLACK);
+        init_pair(3, COLOR_RED, COLOR_BLACK);
+    }
     
-    
+    erase();
+    char* message = "Welcome Conyway's Game Of Life";
+    for (int i = 0; i < ft_strlen(message); i++)
+        mvaddch(0,i, message[i] | COLOR_PAIR(2));
+
+    refresh();
+    napms(1000);
+
+    erase();
+    bkgd(COLOR_PAIR(1));
+
     for (int i = 0; i < iterations; i++)
     {
         int key = getch();
         if (key == 'Q' || key == 'q')
             break;
-        clear();
+        erase();
         for (int j = 0; j < height; j++)
         {
             for (int k = 0; k < width; k++)
             {
-                bool cell = board[j][k] == '1'; 
-                mvprintw(j, k, cell ? "O" : " ");
+                if (board[j][k] == '1')
+                {
+                    mvaddch(j, k, 'O');
+                }
             }
         }
         refresh();
