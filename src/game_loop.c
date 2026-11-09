@@ -64,7 +64,6 @@ static void life(char** board, int row_size, int col_size)
         }
     }
 }
-
 static void init_screen()
 {
     freopen("/dev/tty", "r", stdin);
@@ -105,10 +104,12 @@ void start_game(char** board, int height, int width, int iterations)
     erase();
     char* message = "Welcome Conyway's Game Of Life";
     for (int i = 0; i < ft_strlen(message); i++)
+    {
         mvaddch(0,i+70, message[i] | COLOR_PAIR(PAIR_MESSAGE));
-
-    refresh();
-    napms(2000);
+        refresh();
+        napms(100);
+    }
+    napms(1300);
     erase();
 
     for (int i = 0; i < iterations; i++)
