@@ -74,29 +74,30 @@ static void life(char** board, int row_size, int col_size)
 
 static void start_game(char** board, int height, int width, int iterations)
 {
+    freopen("/dev/tty", "r", stdin);
     initscr();
     curs_set(0);
+    cbreak();
+    noecho();
     nodelay(stdscr, TRUE);
-
     
-    // int key = getch();
-    // if (key == 'Q' || key == 'q')
-    //     break;
-
+    
     for (int i = 0; i < iterations; i++)
     {
+        int key = getch();
+        if (key == 'Q' || key == 'q')
+            break;
         clear();
-        for (int i = 0; i < height; i++)
+        for (int j = 0; j < height; j++)
         {
-            for (int j = 0; j < width; j++)
+            for (int k = 0; k < width; k++)
             {
-                bool cell = board[i][j] == '1'; 
-                mvprintw(i, j, cell ? "O" : " ");
+                bool cell = board[j][k] == '1'; 
+                mvprintw(j, k, cell ? "O" : " ");
             }
-            mvprintw(i+1, 0, "\n");
         }
         refresh();
-        napms(100);
+        napms(50);
         life(board, height, width);
     }
 }
@@ -119,7 +120,7 @@ int main(int argc, char const *argv[])
     board[height] = NULL;
     
     if (!init_board(board, height, width))
-        return false;
+        return 1;
 
     start_game(board, height, width, iterations);
 
