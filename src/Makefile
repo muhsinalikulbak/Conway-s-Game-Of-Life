@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I../inc
-SRC = main.c init_board.c utils.c
+SRC = main.c init_board.c utils.c game_loop.c
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 TARGET = life

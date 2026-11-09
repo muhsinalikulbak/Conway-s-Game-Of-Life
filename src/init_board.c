@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "init_board.h"
 #include "utils.h"
+#include <stdio.h>
 
 bool init_board(char** board, int height, int width)
 {
@@ -10,10 +11,9 @@ bool init_board(char** board, int height, int width)
     {
         if (actions)
             free(actions);
-        if (board)
-            free(board);
         return false;
     }
+
     if (actions)
         free(actions);
     return true;
@@ -32,9 +32,7 @@ bool load_board(char** board, char* actions, int row_size, int col_size)
         board[i] = calloc(sizeof(char), col_size + 1);
         if (!board[i])
         {
-            for (int j = i-1; j >= 0; j--)
-                if (board[j])
-                    free(board[j]);
+            free_all(board, row_size);
             return false;
         }
 
@@ -45,17 +43,24 @@ bool load_board(char** board, char* actions, int row_size, int col_size)
     
     for (int i = 0; i < len; i++)
     {
-        if (actions[i] == 'w' && y > 0)
-            y--;
-        else if (actions[i] == 's' && y < row_size - 1)
-            y++;
-        else if (actions[i] == 'd' && x < col_size - 1)
-            x++;
-        else if (actions[i] == 'a' && x > 0)
-            x--;
-        else if (actions[i] == 'x')
-            draw = !draw;
+        char ch = actions[i];
+        if (ch != 'w' && ch != 's' && ch != 'd' && ch != 'a' && ch != 'x' && ch != '\n')
+        {
+            free_all(board, row_size);
+            return false;
+        }
         
+        if (ch == 'w' && y > 0)
+            y--;
+        else if (ch == 's' && y < row_size - 1)
+            y++;
+        else if (ch == 'd' && x < col_size - 1)
+            x++;
+        else if (ch == 'a' && x > 0)
+            x--;
+        else if (ch == 'x')
+            draw = !draw;
+
         if (draw)
             board[y][x] = '1';
     }

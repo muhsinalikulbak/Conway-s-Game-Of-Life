@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <stdlib.h>
 
 int ft_strlen(char* str)
 {
@@ -24,4 +25,17 @@ void ft_memcpy(char* dest, char* src)
         dest[i] = src[i];
         i++;
     }
+}
+
+void free_all(char** arr, int height)
+{
+    if (!arr)
+        return;
+
+    for (int i = 0; i < height; i++)
+        if (arr[i])
+            free(arr[i]);
+    
+    if (arr)
+        free(arr);
 }
