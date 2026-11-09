@@ -91,6 +91,7 @@ void start_game(char** board, int height, int width, int iterations)
         return;
 
     int** alive_log = calloc(height + 1, sizeof(int*));
+    int alive_cells = 0;
     if (!alive_log)
         return;
 
@@ -118,6 +119,12 @@ void start_game(char** board, int height, int width, int iterations)
         if (key == 'Q' || key == 'q')
             break;
         erase();
+        
+        attron(COLOR_PAIR(PAIR_MESSAGE));
+        mvprintw(0, 0, "Iter : %d, Alive Cells : %d, Q: quit", i, alive_cells);
+        attroff(COLOR_PAIR(PAIR_NUMBER));
+
+        alive_cells = 0;
         for (int j = 0; j < height; j++)
         {
             for (int k = 0; k < width; k++)
@@ -127,13 +134,14 @@ void start_game(char** board, int height, int width, int iterations)
                     int age = alive_log[j][k]++;
 
                     if (age == 0)
-                        mvaddch(j, k, 'O' | COLOR_PAIR(NEW_BORN));
+                        mvaddch(j+1, k, 'O' | COLOR_PAIR(NEW_BORN));
                     else if (age <= 5)
-                        mvaddch(j, k, 'O' | COLOR_PAIR(TEEN));
+                        mvaddch(j+1, k, 'O' | COLOR_PAIR(TEEN));
                     else if (age <= 11)
-                        mvaddch(j, k, 'O' | COLOR_PAIR(ADULT));
+                        mvaddch(j+1, k, 'O' | COLOR_PAIR(ADULT));
                     else
-                        mvaddch(j, k, 'O' | COLOR_PAIR(OLD));
+                        mvaddch(j+1, k, 'O' | COLOR_PAIR(OLD));
+                    alive_cells++;
                 }
                 else
                     alive_log[j][k] = 0;
