@@ -1,4 +1,4 @@
-# Life: Conway's Game of Life in the Terminal
+![Game of Life demo](assets/demo.gif)# Life: Conway's Game of Life in the Terminal
 
 A Game of Life simulator written in C. You draw the starting pattern with a tiny "pen" language piped into stdin, and the program animates the simulation in your terminal using **ncurses**, with colors that show how long each cell has been alive.
 
