@@ -81,21 +81,35 @@ void start_game(char** board, int height, int width, int iterations)
     {
         start_color();
         use_default_colors();
-        init_pair(PAIR_ALIVE_CELL, COLOR_CYAN, -1);
-        init_pair(PAIR_DEFAULT, -1, -1);
-        init_pair(NEW_BORN, COLOR_GREEN, -1);
         init_pair(PAIR_MESSAGE, COLOR_BLUE, COLOR_BLACK);
-        init_pair(TEEN, COLOR_GREEN, -1);
-        init_pair(ADULT, COLOR_YELLOW, -1);
-        init_pair(OLD, COLOR_RED, -1);
-
+        if (COLORS >= 256)
+        {
+            for (unsigned int i = 0; i < GRADIENT_SIZE; i++)
+                init_pair(GRADIENT_BASE + i, gradient[i], -1);
+        }
     }
     else
         return;
 
     int alive_cells = 0;
-    int color_pair = 0;
+    int color_pair = 1;
     int speed = 100;
+    int** age_logs = calloc(height + 1, sizeof(int*));
+
+    if (!age_logs)
+        return;
+    age_logs[height] = NULL;
+
+    for (int i = 0; i < height; i++)
+    {
+        age_logs[i] = calloc(width, sizeof(int));
+        if (!age_logs[i])
+        {
+            free_all(age_logs, height);
+            return;
+        }
+    }
+    
 
     erase();
     char* message = "Welcome Conyway's Game Of Life";
@@ -123,18 +137,24 @@ void start_game(char** board, int height, int width, int iterations)
         
         erase();
         attron(COLOR_PAIR(PAIR_MESSAGE));
-        mvprintw(0, 0, "Iter : %d, Alive Cells : %d, Q: quit, C: change color, +: Inc Speed, -: Dec Speed" , i, alive_cells);
+        mvprintw(0, 0, "Iter : %d, Alive Cells : %d, Q: quit, +: Inc Speed, -: Dec Speed" , i, alive_cells);
         attroff(COLOR_PAIR(PAIR_MESSAGE));
-        alive_cells = 0;
+
+        alive_cells = 0; // Her iterasyonda tekrar hesaplanır.
         for (int j = 0; j < height; j++)
         {
             for (int k = 0; k < width; k++)
             {
                 if (board[j][k] == '1')
                 {
-                    mvaddch(j+1, k, 'O' | COLOR_PAIR(color_pair));
+                    unsigned int age = ++age_logs[j][k];
+                    int idx = age < GRADIENT_SIZE ? age : GRADIENT_SIZE - 1;
+
+                    mvaddch(j+1, k, 'O' | COLOR_PAIR(GRADIENT_BASE + idx));
                     alive_cells++;
                 }
+                else
+                    age_logs[j][k] = 0;
             }
         }
         refresh();
