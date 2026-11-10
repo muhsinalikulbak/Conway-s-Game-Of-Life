@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I../inc
-SRC = main.c init_board.c utils.c game_loop.c
+CFLAGS = -Wall -Wextra -Werror -Iinc
+SRC = src/main.c src/init_board.c src/utils.c src/game_loop.c
 OBJ_DIR = obj
-OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
+OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 TARGET = life
 LIBS = -lncurses
 
@@ -14,7 +14,7 @@ $(OBJ_DIR):
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $(TARGET) $(LIBS)
 
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
