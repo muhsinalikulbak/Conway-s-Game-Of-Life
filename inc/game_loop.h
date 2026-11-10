@@ -8,6 +8,7 @@
 typedef enum 
 { 
     PAIR_MESSAGE = 1,
+    PAIR_DEAFULT = 2,
 } ColorPairs;
 
 // maviden kırmızıya, 256 renk paletinden seçilmiş geçiş

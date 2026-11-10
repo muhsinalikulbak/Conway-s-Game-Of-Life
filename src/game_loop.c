@@ -82,6 +82,8 @@ void start_game(char** board, int height, int width, int iterations)
         start_color();
         use_default_colors();
         init_pair(PAIR_MESSAGE, COLOR_BLUE, COLOR_BLACK);
+        init_pair(PAIR_DEAFULT, COLOR_GREEN, COLOR_BLACK);
+
         if (COLORS >= 256)
         {
             for (unsigned int i = 0; i < GRADIENT_SIZE; i++)
@@ -94,6 +96,7 @@ void start_game(char** board, int height, int width, int iterations)
     int alive_cells = 0;
     int color_pair = 1;
     int speed = 100;
+    bool gradient_state = true;
     int** age_logs = calloc(height + 1, sizeof(int*));
 
     if (!age_logs)
@@ -133,11 +136,13 @@ void start_game(char** board, int height, int width, int iterations)
             speed -= 25;
         else if (key == '-')
             speed += 25;
+        else if (key == ' ')
+            gradient_state = !gradient_state;
 
         
         erase();
         attron(COLOR_PAIR(PAIR_MESSAGE));
-        mvprintw(0, 0, "Iter : %d, Alive Cells : %d, Q: quit, +: Inc Speed, -: Dec Speed" , i, alive_cells);
+        mvprintw(0, 0, "Iter : %d, Alive Cells : %d, Q: quit, Gradient on/off: SPACE, +: Inc Speed, -: Dec Speed" , i, alive_cells);
         attroff(COLOR_PAIR(PAIR_MESSAGE));
 
         alive_cells = 0; // Her iterasyonda tekrar hesaplanır.
@@ -150,7 +155,11 @@ void start_game(char** board, int height, int width, int iterations)
                     unsigned int age = ++age_logs[j][k];
                     int idx = age < GRADIENT_SIZE ? age : GRADIENT_SIZE - 1;
 
-                    mvaddch(j+1, k, 'O' | COLOR_PAIR(GRADIENT_BASE + idx));
+                    if (gradient_state)
+                       mvaddch(j+1, k, 'O' | COLOR_PAIR(GRADIENT_BASE + idx));
+                    else
+                       mvaddch(j+1, k, 'O' | COLOR_PAIR(PAIR_DEAFULT));
+
                     alive_cells++;
                 }
                 else
