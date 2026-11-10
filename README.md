@@ -1,4 +1,6 @@
-![Game of Life demo](assets/demo.gif)# Life: Conway's Game of Life in the Terminal
+![Game of Life demo](assets/demo.gif)
+
+# Life: Conway's Game of Life in the Terminal
 
 A Game of Life simulator written in C. You draw the starting pattern with a tiny "pen" language piped into stdin, and the program animates the simulation in your terminal using **ncurses**, with colors that show how long each cell has been alive.
 
@@ -16,6 +18,7 @@ A Game of Life simulator written in C. You draw the starting pattern with a tiny
 - The ncurses development library
 - A terminal with color support (256 colors for the gradient)
 
+
 ### Installing ncurses
 
 | System | Command |
@@ -28,6 +31,7 @@ A Game of Life simulator written in C. You draw the starting pattern with a tiny
 | Windows | Use WSL (Ubuntu) and follow the Debian / Ubuntu line |
 
 macOS already ships with a system ncurses, so after installing the Xcode command line tools the build usually works without Homebrew.
+![Game of Life demo](assets/Screenshot_20261110_232126.png)
 
 ## Build
 
