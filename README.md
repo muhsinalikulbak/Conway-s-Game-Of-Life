@@ -31,6 +31,9 @@ A Game of Life simulator written in C. You draw the starting pattern with a tiny
 | Windows | Use WSL (Ubuntu) and follow the Debian / Ubuntu line |
 
 macOS already ships with a system ncurses, so after installing the Xcode command line tools the build usually works without Homebrew.
+
+
+
 ![Game of Life demo](assets/Screenshot_20261110_232126.png)
 
 ## Build
