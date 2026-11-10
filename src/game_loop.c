@@ -170,4 +170,5 @@ void start_game(char** board, int height, int width, int iterations)
         napms(speed);
         life(board, height, width);
     }
+    free_all(age_logs, height);
 }
