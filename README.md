@@ -2,8 +2,6 @@
 
 A Game of Life simulator written in C. You draw the starting pattern with a tiny "pen" language piped into stdin, and the program animates the simulation in your terminal using **ncurses**, with colors that show how long each cell has been alive.
 
-Based on the 42 `life` exam assignment, extended with a live visualizer.
-
 ## Features
 
 - Initial board drawn with pen commands read from stdin
