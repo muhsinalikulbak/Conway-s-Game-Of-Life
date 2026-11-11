@@ -94,7 +94,6 @@ void start_game(char** board, int height, int width, int iterations)
         return;
 
     int alive_cells = 0;
-    int color_pair = 1;
     int speed = 100;
     bool gradient_state = true;
     int** age_logs = calloc(height + 1, sizeof(int*));
@@ -130,8 +129,6 @@ void start_game(char** board, int height, int width, int iterations)
         int key = getch();
         if (key == 'Q' || key == 'q')
             break;
-        else if (key == 'C' || key == 'c')
-            color_pair = (color_pair + 1) % 7;
         else if (key == '+')
             speed -= 25;
         else if (key == '-')
