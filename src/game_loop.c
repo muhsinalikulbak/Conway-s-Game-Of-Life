@@ -117,7 +117,7 @@ void start_game(char** board, int height, int width, int iterations)
     char* message = "Welcome Conyway's Game Of Life";
     for (int i = 0; i < ft_strlen(message); i++)
     {
-        mvaddch(0,i+70, message[i] | COLOR_PAIR(PAIR_MESSAGE));
+        mvaddch(0, (COLS - ft_strlen(message)) / 2 + i, message[i] | COLOR_PAIR(PAIR_MESSAGE));
         refresh();
         napms(100);
     }
